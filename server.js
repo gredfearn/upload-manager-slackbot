@@ -10,14 +10,14 @@ const bot = new Slack(client_id);
 // Create a server with a host and port
 const server = Hapi.server({
 	host: process.env.HOST,
-  port: process.env.HOST_PORT
+	port: process.env.HOST_PORT
 });
 
 // Add the route
 server.route({
-	method:'GET',
-  path:'/hello',
-	handler: async function(request,h){
+	method: 'GET',
+	path: '/hello',
+	handler: async function (request, h) {
 		try {
 			const response = await getFiles();
 			if (response.ok) {
@@ -27,15 +27,15 @@ server.route({
 				} catch (e) {
 					console.log('Error deleting file: ', e);
 				}
-				return 'ok';	
+				return 'ok';
 			}
- 		} catch(e) {
+		} catch (e) {
 			console.log(e);
 		}
 	}
 });
 
-async function deleteFiles(files){
+async function deleteFiles(files) {
 	files.forEach((file, idx) => {
 		try {
 			const params = {
@@ -43,12 +43,12 @@ async function deleteFiles(files){
 				token: process.env.SLACK_TOKEN
 			}
 			if (idx % 50 == 0) {
-			//	setTimeout(() => deleteFile(params), 60000);
+				//	setTimeout(() => deleteFile(params), 60000);
 			} else {
 				deleteFile(params);
 			}
-		} catch(e) {
-			console.log('Unable To Delete File: ', e);	
+		} catch (e) {
+			console.log('Unable To Delete File: ', e);
 		}
 	});
 }
@@ -58,7 +58,7 @@ async function deleteFile(params) {
 		const file = await bot.files.delete(params);
 		console.log('FILE: ', file);
 		return 'ok';
-	} catch(e) {
+	} catch (e) {
 		console.log('Error deleting file: ', e);
 	}
 }
@@ -75,13 +75,13 @@ async function getFiles() {
 }
 
 async function start() {
-	try { 
+	try {
 		await server.start();
 	} catch (err) {
 		console.log(err);
 		process.exit(1);
 	}
-		console.log('Server running at:', server.info.uri);
+	console.log('Server running at:', server.info.uri);
 };
 
 start();
